@@ -1,8 +1,13 @@
+import path from 'node:path';
+
+import { serveStatic } from '@hono/node-server/serve-static';
 import { Hono } from 'hono';
+import { compress } from 'hono/compress';
 import { cors } from 'hono/cors';
 import { HTTPException } from 'hono/http-exception';
 import { secureHeaders } from 'hono/secure-headers';
 
+import { IMAGES_PATH } from '../constants/paths';
 import { cacheControlMiddleware } from '../middlewares/cacheControlMiddleware';
 import { compressMiddleware } from '../middlewares/compressMiddleware';
 
@@ -11,7 +16,6 @@ import { apiApp } from './api';
 import { imageApp } from './image';
 import { ssrApp } from './ssr';
 import { staticApp } from './static';
-
 const app = new Hono();
 
 app.use(secureHeaders());
@@ -24,12 +28,22 @@ app.use(
     origin: (origin) => origin,
   }),
 );
+
+app.use(compress());
 app.use(compressMiddleware);
 app.use(cacheControlMiddleware);
 
 app.get('/healthz', (c) => {
   return c.body('live', 200);
 });
+app.use(
+  '/raw-images/*',
+  serveStatic({
+    onNotFound: (p) => console.log(path.relative(process.cwd(), IMAGES_PATH), p),
+    rewriteRequestPath: (path) => path.replace('/raw-images/', ''),
+    root: path.relative(process.cwd(), IMAGES_PATH),
+  }),
+);
 app.route('/', staticApp);
 app.route('/', imageApp);
 app.route('/', apiApp);
