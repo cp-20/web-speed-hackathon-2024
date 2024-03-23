@@ -3,11 +3,7 @@ import React, { useId } from 'react';
 import styled from 'styled-components';
 
 import { DialogContentAtom } from '../atoms/DialogContentAtom';
-import { COMPANY } from '../constants/Company';
-import { CONTACT } from '../constants/Contact';
-import { OVERVIEW } from '../constants/Overview';
-import { QUESTION } from '../constants/Question';
-import { TERM } from '../constants/Term';
+import { useResource } from '../hooks/useResource';
 import { Color, Space, Typography } from '../styles/variables';
 
 import { Box } from './Box';
@@ -25,6 +21,12 @@ const _Content = styled.section`
 `;
 
 export const Footer: React.FC = () => {
+  const term = useResource('/assets/texts/term.txt');
+  const contact = useResource('/assets/texts/contact.txt');
+  const question = useResource('/assets/texts/question.txt');
+  const company = useResource('/assets/texts/company.txt');
+  const overview = useResource('/assets/texts/overview.txt');
+
   const [isClient, setIsClient] = React.useState(false);
 
   React.useEffect(() => {
@@ -47,7 +49,7 @@ export const Footer: React.FC = () => {
         </Text>
         <Spacer height={Space * 1} />
         <Text as="p" color={Color.MONO_100} typography={Typography.NORMAL12}>
-          {TERM}
+          {term}
         </Text>
       </_Content>,
     );
@@ -61,7 +63,7 @@ export const Footer: React.FC = () => {
         </Text>
         <Spacer height={Space * 1} />
         <Text as="p" color={Color.MONO_100} typography={Typography.NORMAL12}>
-          {CONTACT}
+          {contact}
         </Text>
       </_Content>,
     );
@@ -75,7 +77,7 @@ export const Footer: React.FC = () => {
         </Text>
         <Spacer height={Space * 1} />
         <Text as="p" color={Color.MONO_100} typography={Typography.NORMAL12}>
-          {QUESTION}
+          {question}
         </Text>
       </_Content>,
     );
@@ -89,7 +91,7 @@ export const Footer: React.FC = () => {
         </Text>
         <Spacer height={Space * 1} />
         <Text as="p" color={Color.MONO_100} typography={Typography.NORMAL12}>
-          {COMPANY}
+          {company}
         </Text>
       </_Content>,
     );
@@ -103,7 +105,7 @@ export const Footer: React.FC = () => {
         </Text>
         <Spacer height={Space * 1} />
         <Text as="p" color={Color.MONO_100} typography={Typography.NORMAL12}>
-          {OVERVIEW}
+          {overview}
         </Text>
       </_Content>,
     );
