@@ -2,6 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 
 import { createRoute, OpenAPIHono } from '@hono/zod-openapi';
+import sharp from 'sharp';
 
 import { PostImageRequestBodySchema } from '@wsh-2024/schema/src/api/images/PostImageRequestBody';
 import { PostImageResponseSchema } from '@wsh-2024/schema/src/api/images/PostImageResponse';
@@ -54,10 +55,9 @@ app.openapi(route, async (c) => {
   await fs.mkdir(IMAGES_PATH, {
     recursive: true,
   });
-  await fs.writeFile(
-    path.resolve(IMAGES_PATH, `./${result.value.id}.jpg`),
-    Buffer.from(await formData.content.arrayBuffer()),
-  );
+  await sharp(Buffer.from(await formData.content.arrayBuffer()))
+    .avif({ quality: 30 })
+    .toFile(path.resolve(IMAGES_PATH, `./${result.value.id}.avif`));
 
   return c.json(result.value);
 });

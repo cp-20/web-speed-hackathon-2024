@@ -3,9 +3,6 @@ import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 
 import { decrypt } from '@wsh-2024/image-encrypt/src/decrypt';
-
-import { getImageUrl } from '../../../lib/image/getImageUrl';
-
 type Props = {
   pageImageId: string;
 };
@@ -14,10 +11,7 @@ export const ComicPageImage: React.FC<Props> = ({ pageImageId }) => {
   const { data: blob } = useQuery({
     queryFn: async ({ queryKey: [, { pageImageId }] }) => {
       const image = new Image();
-      image.src = getImageUrl({
-        format: 'jxl',
-        imageId: pageImageId,
-      });
+      image.src = `/raw-images/${pageImageId}.avif`;
       await image.decode();
 
       const canvas = document.createElement('canvas');
