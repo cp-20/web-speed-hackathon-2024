@@ -1,6 +1,6 @@
 import type moment from 'moment-timezone';
 
-const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'] as const;
+export const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'] as const;
 
 export const getDayOfWeekStr = (date: moment.Moment) => {
   const dayOfWeek = date.day();
