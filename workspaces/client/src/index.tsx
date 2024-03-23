@@ -10,12 +10,13 @@ import { registerServiceWorker } from './utils/registerServiceWorker';
 
 const main = async () => {
   await registerServiceWorker();
-  // await preloadImages();
+
+  const fallback = JSON.parse(document.getElementById('inject-data')?.textContent ?? '{}');
 
   $(document).ready(() => {
     ReactDOM.hydrateRoot(
       $('#root').get(0)!,
-      <SWRConfig value={{ revalidateIfStale: true, revalidateOnFocus: false, revalidateOnReconnect: false }}>
+      <SWRConfig value={{ fallback, revalidateOnFocus: false, revalidateOnReconnect: false }}>
         <BrowserRouter>
           <ClientApp />
         </BrowserRouter>

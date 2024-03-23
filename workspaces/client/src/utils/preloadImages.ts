@@ -4,16 +4,7 @@ async function wait(milliseconds: number) {
   return new Promise((resolve) => setTimeout(resolve, milliseconds));
 }
 
-export async function preloadImages() {
-  if (process.env['PATH_LIST'] == null) {
-    return;
-  }
-
-  const imagePathList: string[] = process.env['PATH_LIST'].split(',').filter((imagePath) => {
-    const extension = path.parse(imagePath).ext.toLowerCase();
-    return ['.bmp', '.jpg', '.jpeg', '.gif', '.png', '.webp', '.avif'].includes(extension);
-  });
-
+export async function preloadImages(imagePathList: string[]) {
   const prefetch = Promise.all(
     imagePathList.map((imagePath) => {
       return new Promise((resolve) => {
@@ -34,4 +25,17 @@ export async function preloadImages() {
   );
 
   await Promise.race([prefetch, wait(5000)]);
+}
+
+export async function preloadAllImages() {
+  if (process.env['PATH_LIST'] == null) {
+    return;
+  }
+
+  const imagePathList: string[] = process.env['PATH_LIST'].split(',').filter((imagePath) => {
+    const extension = path.parse(imagePath).ext.toLowerCase();
+    return ['.bmp', '.jpg', '.jpeg', '.gif', '.png', '.webp', '.avif'].includes(extension);
+  });
+
+  await preloadImages(imagePathList);
 }
