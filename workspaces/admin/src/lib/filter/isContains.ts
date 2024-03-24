@@ -6,7 +6,8 @@ type Params = {
 const normalize = (str: string) => {
   str = str.normalize('NFKC');
   // カタカナを平仮名に
-  if (str >= 'ァ' && str <= 'ン') return str.charCodeAt(0) + ('あ'.charCodeAt(0) - 'ア'.charCodeAt(0));
+  if (str >= 'ァ' && str <= 'ン')
+    return String.fromCharCode(str.charCodeAt(0) + ('あ'.charCodeAt(0) - 'ア'.charCodeAt(0)));
   return str;
 };
 
