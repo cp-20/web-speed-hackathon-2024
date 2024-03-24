@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import { Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { SWRConfig } from 'swr';
@@ -16,11 +17,13 @@ const main = async () => {
   $(document).ready(() => {
     ReactDOM.hydrateRoot(
       $('#root').get(0)!,
-      <SWRConfig value={{ fallback, revalidateOnFocus: false, revalidateOnReconnect: false }}>
-        <BrowserRouter>
-          <ClientApp />
-        </BrowserRouter>
-      </SWRConfig>,
+      <Suspense fallback={<p>Loading</p>}>
+        <SWRConfig value={{ fallback, revalidateOnFocus: false, revalidateOnReconnect: false }}>
+          <BrowserRouter>
+            <ClientApp />
+          </BrowserRouter>
+        </SWRConfig>
+      </Suspense>,
     );
   });
 };

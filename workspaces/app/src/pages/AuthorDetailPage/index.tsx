@@ -6,6 +6,7 @@ import invariant from 'tiny-invariant';
 
 import { useAuthor } from '../../features/author/hooks/useAuthor';
 import { BookListItem } from '../../features/book/components/BookListItem';
+import { useBookList } from '../../features/book/hooks/useBookList';
 import { Box } from '../../foundation/components/Box';
 import { Flex } from '../../foundation/components/Flex';
 import { Image } from '../../foundation/components/Image';
@@ -35,6 +36,7 @@ const AuthorDetailPage: React.FC = () => {
   invariant(authorId);
 
   const { data: author } = useAuthor({ params: { authorId } });
+  const { data: bookList } = useBookList({ query: { authorId } });
 
   const imageUrl = `/raw-images/${author.image.id}_128x128.avif`;
   const bookListA11yId = useId();
@@ -68,8 +70,8 @@ const AuthorDetailPage: React.FC = () => {
         <Spacer height={Space * 2} />
 
         <Flex align="center" as="ul" direction="column" justify="center">
-          {author.books.map((book) => (
-            <BookListItem key={book.id} bookId={book.id} />
+          {bookList.map((book) => (
+            <BookListItem key={book.id} book={book} />
           ))}
           {author.books.length === 0 && (
             <>
