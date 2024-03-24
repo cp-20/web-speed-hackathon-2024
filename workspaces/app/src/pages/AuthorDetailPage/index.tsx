@@ -1,4 +1,5 @@
 import { Suspense, useId } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
 import { useParams } from 'react-router-dom';
 import type { RouteParams } from 'regexparam';
 import { styled } from 'styled-components';
@@ -89,9 +90,11 @@ const AuthorDetailPage: React.FC = () => {
 
 const AuthorDetailPageWithSuspense: React.FC = () => {
   return (
-    <Suspense fallback={null}>
-      <AuthorDetailPage />
-    </Suspense>
+    <ErrorBoundary fallback={<p>Something went wrong</p>}>
+      <Suspense fallback={null}>
+        <AuthorDetailPage />
+      </Suspense>
+    </ErrorBoundary>
   );
 };
 

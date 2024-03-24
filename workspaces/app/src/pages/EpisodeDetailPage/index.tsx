@@ -1,4 +1,5 @@
 import { Suspense } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
 import { useParams } from 'react-router-dom';
 import type { RouteParams } from 'regexparam';
 import invariant from 'tiny-invariant';
@@ -47,9 +48,11 @@ export const EpisodeList: React.FC<{ bookId: string }> = ({ bookId }) => {
 
 const EpisodeDetailPageWithSuspense: React.FC = () => {
   return (
-    <Suspense fallback={null}>
-      <EpisodeDetailPage />
-    </Suspense>
+    <ErrorBoundary fallback={<p>Something went wrong</p>}>
+      <Suspense fallback={null}>
+        <EpisodeDetailPage />
+      </Suspense>
+    </ErrorBoundary>
   );
 };
 

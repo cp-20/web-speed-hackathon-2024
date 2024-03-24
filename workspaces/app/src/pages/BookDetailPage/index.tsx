@@ -1,5 +1,6 @@
 import { useAtom } from 'jotai/react';
 import { Suspense, useCallback } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
 import { useParams } from 'react-router-dom';
 import type { RouteParams } from 'regexparam';
 import { styled } from 'styled-components';
@@ -19,7 +20,6 @@ import { Text } from '../../foundation/components/Text';
 import { Color, Space, Typography } from '../../foundation/styles/variables';
 
 import { BottomNavigator } from './internal/BottomNavigator';
-
 const _HeadingWrapper = styled.section`
   display: grid;
   align-items: start;
@@ -124,9 +124,11 @@ const BookDetailPage: React.FC = () => {
 
 const BookDetailPageWithSuspense: React.FC = () => {
   return (
-    <Suspense fallback={null}>
-      <BookDetailPage />
-    </Suspense>
+    <ErrorBoundary fallback={<p>Something went wrong</p>}>
+      <Suspense fallback={null}>
+        <BookDetailPage />
+      </Suspense>
+    </ErrorBoundary>
   );
 };
 
