@@ -26,54 +26,58 @@ const app = new Hono();
 async function createInjectDataStr(path: string): Promise<Record<string, unknown>> {
   const json: Record<string, unknown> = {};
 
-  if (path === '/') {
-    const dayOfWeek = getDayOfWeekStr(moment());
-    const [releases, features, ranking] = await Promise.all([
-      releaseApiClient.fetch({ params: { dayOfWeek } }),
-      featureApiClient.fetchList({ query: {} }),
-      rankingApiClient.fetchList({ query: {} }),
-    ]);
-    json[unstable_serialize(releaseApiClient.fetch$$key({ params: { dayOfWeek } }))] = releases;
-    json[unstable_serialize(featureApiClient.fetchList$$key({ query: {} }))] = features;
-    json[unstable_serialize(rankingApiClient.fetchList$$key({ query: {} }))] = ranking;
-  }
+  try {
+    if (path === '/') {
+      const dayOfWeek = getDayOfWeekStr(moment());
+      const [releases, features, ranking] = await Promise.all([
+        releaseApiClient.fetch({ params: { dayOfWeek } }),
+        featureApiClient.fetchList({ query: {} }),
+        rankingApiClient.fetchList({ query: {} }),
+      ]);
+      json[unstable_serialize(releaseApiClient.fetch$$key({ params: { dayOfWeek } }))] = releases;
+      json[unstable_serialize(featureApiClient.fetchList$$key({ query: {} }))] = features;
+      json[unstable_serialize(rankingApiClient.fetchList$$key({ query: {} }))] = ranking;
+    }
 
-  const bookDetail = path.match(/^\/books\/([^/]+)$/);
-  if (bookDetail != null) {
-    const [book, episodes] = await Promise.all([
-      bookApiClient.fetch({ params: { bookId: bookDetail[1]! } }),
-      episodeApiClient.fetchList({ query: { bookId: bookDetail[1]! } }),
-    ]);
-    json[unstable_serialize(bookApiClient.fetch$$key({ params: { bookId: bookDetail[1]! } }))] = book;
-    json[unstable_serialize(episodeApiClient.fetchList$$key({ query: { bookId: bookDetail[1]! } }))] = episodes;
-  }
+    const bookDetail = path.match(/^\/books\/([^/]+)$/);
+    if (bookDetail != null) {
+      const [book, episodes] = await Promise.all([
+        bookApiClient.fetch({ params: { bookId: bookDetail[1]! } }),
+        episodeApiClient.fetchList({ query: { bookId: bookDetail[1]! } }),
+      ]);
+      json[unstable_serialize(bookApiClient.fetch$$key({ params: { bookId: bookDetail[1]! } }))] = book;
+      json[unstable_serialize(episodeApiClient.fetchList$$key({ query: { bookId: bookDetail[1]! } }))] = episodes;
+    }
 
-  const episodeDetail = path.match(/^\/books\/([^/]+)\/episodes\/([^/]+)$/);
-  if (episodeDetail != null) {
-    const [episode, episodes] = await Promise.all([
-      episodeApiClient.fetch({ params: { episodeId: episodeDetail[2]! } }),
-      episodeApiClient.fetchList({ query: { bookId: episodeDetail[1]! } }),
-    ]);
-    json[unstable_serialize(episodeApiClient.fetch$$key({ params: { episodeId: episodeDetail[2]! } }))] = episode;
-    json[unstable_serialize(episodeApiClient.fetchList$$key({ query: { bookId: episodeDetail[1]! } }))] = episodes;
-  }
+    const episodeDetail = path.match(/^\/books\/([^/]+)\/episodes\/([^/]+)$/);
+    if (episodeDetail != null) {
+      const [episode, episodes] = await Promise.all([
+        episodeApiClient.fetch({ params: { episodeId: episodeDetail[2]! } }),
+        episodeApiClient.fetchList({ query: { bookId: episodeDetail[1]! } }),
+      ]);
+      json[unstable_serialize(episodeApiClient.fetch$$key({ params: { episodeId: episodeDetail[2]! } }))] = episode;
+      json[unstable_serialize(episodeApiClient.fetchList$$key({ query: { bookId: episodeDetail[1]! } }))] = episodes;
+    }
 
-  const authorDetail = path.match(/^\/authors\/([^/]+)$/);
-  if (authorDetail != null) {
-    const [author, books] = await Promise.all([
-      authorApiClient.fetch({ params: { authorId: authorDetail[1]! } }),
-      bookApiClient.fetchList({ query: { authorId: authorDetail[1]! } }),
-    ]);
-    json[unstable_serialize(authorApiClient.fetch$$key({ params: { authorId: authorDetail[1]! } }))] = author;
-    json[unstable_serialize(bookApiClient.fetchList$$key({ query: { authorId: authorDetail[1]! } }))] = books;
-  }
+    const authorDetail = path.match(/^\/authors\/([^/]+)$/);
+    if (authorDetail != null) {
+      const [author, books] = await Promise.all([
+        authorApiClient.fetch({ params: { authorId: authorDetail[1]! } }),
+        bookApiClient.fetchList({ query: { authorId: authorDetail[1]! } }),
+      ]);
+      json[unstable_serialize(authorApiClient.fetch$$key({ params: { authorId: authorDetail[1]! } }))] = author;
+      json[unstable_serialize(bookApiClient.fetchList$$key({ query: { authorId: authorDetail[1]! } }))] = books;
+    }
 
-  if (path === '/search') {
-    const bookList = await bookApiClient.fetchList({ query: {} });
-    json[unstable_serialize(bookApiClient.fetchList$$key({ query: {} }))] = bookList;
-  }
+    if (path === '/search') {
+      const bookList = await bookApiClient.fetchList({ query: {} });
+      json[unstable_serialize(bookApiClient.fetchList$$key({ query: {} }))] = bookList;
+    }
 
-  return json;
+    return json;
+  } catch (error) {
+    return {};
+  }
 }
 
 async function createHTML({
