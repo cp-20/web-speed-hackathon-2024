@@ -327,6 +327,12 @@ importers:
         specifier: 3.22.4
         version: 3.22.4
 
+  workspaces/scripts:
+    dependencies:
+      sharp:
+        specifier: 0.33.2
+        version: 0.33.2
+
   workspaces/server:
     dependencies:
       '@hapi/accept':
