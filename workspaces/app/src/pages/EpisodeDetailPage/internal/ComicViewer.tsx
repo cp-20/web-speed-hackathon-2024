@@ -27,7 +27,7 @@ const _Wrapper = styled.div<{
   display: grid;
   grid-template-columns: 100%;
   grid-template-rows: 100%;
-  max-height: ${({ $maxHeight }) => addUnitIfNeeded($maxHeight)};
+  height: ${({ $maxHeight }) => addUnitIfNeeded($maxHeight)};
   overflow: hidden;
 `;
 
@@ -42,7 +42,7 @@ export const ComicViewer: React.FC<Props> = ({ episode }) => {
   const [el, ref] = useState<HTMLDivElement | null>(null);
 
   // コンテナの幅
-  const cqw = (el?.getBoundingClientRect().width ?? 0) / 100;
+  const cqw = (el?.getBoundingClientRect().width ?? 360) / 100;
 
   // 1画面に表示できるページ数（1 or 2）
   const pageCountParView = 100 * cqw <= 2 * MIN_PAGE_WIDTH ? 1 : 2;
@@ -55,7 +55,6 @@ export const ComicViewer: React.FC<Props> = ({ episode }) => {
 
   useEffect(() => {
     window.addEventListener('resize', rerender);
-    return () => window.removeEventListener('resize', rerender);
   }, [rerender]);
 
   return (
