@@ -53,7 +53,7 @@ export const Dialog: React.FC = () => {
         <_CloseButton onClick={() => updateContent(null)}>
           <SvgIcon color={Color.MONO_A} height={32} type="Close" width={32} />
         </_CloseButton>
-        <_Container>{content}</_Container>
+        <_Container id="dialog-container">{content}</_Container>
       </_Wrapper>
     </_Overlay>
   ) : null;

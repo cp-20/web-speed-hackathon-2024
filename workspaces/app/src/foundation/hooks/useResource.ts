@@ -1,8 +1,13 @@
-import useImmutableSWR from 'swr/immutable';
-
-const fetcher = (url: string) => fetch(url).then((res) => res.text());
+import { useEffect, useState } from 'react';
 
 export const useResource = (path: string) => {
-  const { data } = useImmutableSWR(path, fetcher);
+  const [data, setData] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch(path)
+      .then((response) => response.text())
+      .then(setData);
+  }, [path]);
+
   return data;
 };

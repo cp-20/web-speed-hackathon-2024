@@ -1,5 +1,5 @@
 import { useSetAtom } from 'jotai';
-import React, { useId } from 'react';
+import React, { useCallback, useEffect, useId } from 'react';
 import styled from 'styled-components';
 
 import { DialogContentAtom } from '../atoms/DialogContentAtom';
@@ -41,7 +41,7 @@ export const Footer: React.FC = () => {
 
   const updateDialogContent = useSetAtom(DialogContentAtom);
 
-  const handleRequestToTermDialogOpen = () => {
+  const handleRequestToTermDialogOpen = useCallback(() => {
     updateDialogContent(
       <_Content aria-labelledby={termDialogA11yId} role="dialog">
         <Text as="h2" color={Color.MONO_100} id={termDialogA11yId} typography={Typography.NORMAL16}>
@@ -53,9 +53,9 @@ export const Footer: React.FC = () => {
         </Text>
       </_Content>,
     );
-  };
+  }, [term, termDialogA11yId, updateDialogContent]);
 
-  const handleRequestToContactDialogOpen = () => {
+  const handleRequestToContactDialogOpen = useCallback(() => {
     updateDialogContent(
       <_Content aria-labelledby={contactDialogA11yId} role="dialog">
         <Text as="h2" color={Color.MONO_100} id={contactDialogA11yId} typography={Typography.NORMAL16}>
@@ -67,9 +67,9 @@ export const Footer: React.FC = () => {
         </Text>
       </_Content>,
     );
-  };
+  }, [contact, contactDialogA11yId, updateDialogContent]);
 
-  const handleRequestToQuestionDialogOpen = () => {
+  const handleRequestToQuestionDialogOpen = useCallback(() => {
     updateDialogContent(
       <_Content aria-labelledby={questionDialogA11yId} role="dialog">
         <Text as="h2" color={Color.MONO_100} id={questionDialogA11yId} typography={Typography.NORMAL16}>
@@ -81,9 +81,9 @@ export const Footer: React.FC = () => {
         </Text>
       </_Content>,
     );
-  };
+  }, [question, questionDialogA11yId, updateDialogContent]);
 
-  const handleRequestToCompanyDialogOpen = () => {
+  const handleRequestToCompanyDialogOpen = useCallback(() => {
     updateDialogContent(
       <_Content aria-labelledby={companyDialogA11yId} role="dialog">
         <Text as="h2" color={Color.MONO_100} id={companyDialogA11yId} typography={Typography.NORMAL16}>
@@ -95,9 +95,9 @@ export const Footer: React.FC = () => {
         </Text>
       </_Content>,
     );
-  };
+  }, [company, companyDialogA11yId, updateDialogContent]);
 
-  const handleRequestToOverviewDialogOpen = () => {
+  const handleRequestToOverviewDialogOpen = useCallback(() => {
     updateDialogContent(
       <_Content aria-labelledby={overviewDialogA11yId} role="dialog">
         <Text as="h2" color={Color.MONO_100} id={overviewDialogA11yId} typography={Typography.NORMAL16}>
@@ -109,7 +109,30 @@ export const Footer: React.FC = () => {
         </Text>
       </_Content>,
     );
-  };
+  }, [overview, overviewDialogA11yId, updateDialogContent]);
+
+  useEffect(() => {
+    const dialog = document.getElementById('dialog-container');
+    if (!dialog) return;
+    const label = dialog.querySelector('h2')?.textContent;
+
+    if (term && label === '利用規約') handleRequestToTermDialogOpen();
+    if (contact && label === 'お問い合わせ') handleRequestToContactDialogOpen();
+    if (question && label === 'Q&A') handleRequestToQuestionDialogOpen();
+    if (company && label === '運営会社') handleRequestToCompanyDialogOpen();
+    if (overview && label === 'Cyber TOONとは') handleRequestToOverviewDialogOpen();
+  }, [
+    company,
+    contact,
+    handleRequestToCompanyDialogOpen,
+    handleRequestToContactDialogOpen,
+    handleRequestToOverviewDialogOpen,
+    handleRequestToQuestionDialogOpen,
+    handleRequestToTermDialogOpen,
+    overview,
+    question,
+    term,
+  ]);
 
   return (
     <Box as="footer" backgroundColor={Color.Background} p={Space * 1}>
