@@ -32,7 +32,7 @@ type Props = {
 };
 
 export const BookListItem: React.FC<Props> = ({ book }) => {
-  const imageUrl = `/raw-images/${book.id}_96x136.avif`;
+  const imageUrl = `/raw-images/${book.image.id}_96x136.avif`;
 
   return (
     <_Wrapper>
