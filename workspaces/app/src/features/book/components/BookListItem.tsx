@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 
+import type { GetBookListResponse } from '@wsh-2024/schema/src/api/books/GetBookListResponse';
+
 import { Box } from '../../../foundation/components/Box';
 import { Flex } from '../../../foundation/components/Flex';
 import { Image } from '../../../foundation/components/Image';
@@ -8,7 +10,6 @@ import { Separator } from '../../../foundation/components/Separator';
 import { Spacer } from '../../../foundation/components/Spacer';
 import { Text } from '../../../foundation/components/Text';
 import { Color, Radius, Space, Typography } from '../../../foundation/styles/variables';
-import { useBook } from '../hooks/useBook';
 
 const _Wrapper = styled.li`
   width: 100%;
@@ -27,12 +28,10 @@ const _ImgWrapper = styled.div`
 `;
 
 type Props = {
-  bookId: string;
+  book: GetBookListResponse[number];
 };
 
-export const BookListItem: React.FC<Props> = ({ bookId }) => {
-  const { data: book } = useBook({ params: { bookId } });
-
+export const BookListItem: React.FC<Props> = ({ book }) => {
   const imageUrl = `/raw-images/${book.id}_96x136.avif`;
 
   return (
