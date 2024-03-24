@@ -47,6 +47,7 @@ jpg.forEach(async (filename) => {
 png.forEach(async (filename) => {
   const input = `${base}/${filename}`;
   const output = `${base}/${filename.replace('.png', '.avif')}`;
+  const output96 = `${base}/${filename.replace('.png', '_96x136.avif')}`;
   const output144 = `${base}/${filename.replace('.png', '_144x204.avif')}`;
   const output288 = `${base}/${filename.replace('.png', '_288x407.avif')}`;
 
@@ -55,6 +56,11 @@ png.forEach(async (filename) => {
       .avif({ quality: 30 })
       .toFile(output)
       .then(() => console.log(`Compressed ${filename} to ${output}`)),
+    sharp(input)
+      .resize(96)
+      .avif({ quality: 30 })
+      .toFile(output96)
+      .then(() => console.log(`Compressed ${filename} to ${output96}`)),
     sharp(input)
       .resize(144)
       .avif({ quality: 30 })
