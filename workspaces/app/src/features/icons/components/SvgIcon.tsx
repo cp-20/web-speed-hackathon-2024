@@ -1,4 +1,4 @@
-import { ArrowBack, Close, Favorite, FavoriteBorder, NavigateNext, Search } from '@mui/icons-material';
+import { ArrowBack, Close, Favorite, FavoriteBorder, NavigateNext, Search } from './Icons';
 
 const Icons = {
   ArrowBack,
