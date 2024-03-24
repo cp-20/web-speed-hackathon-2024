@@ -1,9 +1,8 @@
 import { useSetAtom } from 'jotai';
-import React, { useCallback, useEffect, useId } from 'react';
+import React, { useId, useState } from 'react';
 import styled from 'styled-components';
 
 import { DialogContentAtom } from '../atoms/DialogContentAtom';
-import { useResource } from '../hooks/useResource';
 import { Color, Space, Typography } from '../styles/variables';
 
 import { Box } from './Box';
@@ -21,13 +20,13 @@ const _Content = styled.section`
 `;
 
 export const Footer: React.FC = () => {
-  const term = useResource('/assets/texts/term.txt');
-  const contact = useResource('/assets/texts/contact.txt');
-  const question = useResource('/assets/texts/question.txt');
-  const company = useResource('/assets/texts/company.txt');
-  const overview = useResource('/assets/texts/overview.txt');
+  const [term, setTerm] = useState<string | null>(null);
+  const [contact, setContact] = useState<string | null>(null);
+  const [question, setQuestion] = useState<string | null>(null);
+  const [company, setCompany] = useState<string | null>(null);
+  const [overview, setOverview] = useState<string | null>(null);
 
-  const [isClient, setIsClient] = React.useState(false);
+  const [isClient, setIsClient] = useState(false);
 
   React.useEffect(() => {
     setIsClient(true);
@@ -41,7 +40,15 @@ export const Footer: React.FC = () => {
 
   const updateDialogContent = useSetAtom(DialogContentAtom);
 
-  const handleRequestToTermDialogOpen = useCallback(() => {
+  const handleRequestToTermDialogOpen = async () => {
+    const getTerm = async () => {
+      if (term != null) return term;
+      const res = await fetch('/assets/texts/term.txt');
+      const newTerm = await res.text();
+      setTerm(newTerm);
+      return newTerm;
+    };
+
     updateDialogContent(
       <_Content aria-labelledby={termDialogA11yId} role="dialog">
         <Text as="h2" color={Color.MONO_100} id={termDialogA11yId} typography={Typography.NORMAL16}>
@@ -49,13 +56,21 @@ export const Footer: React.FC = () => {
         </Text>
         <Spacer height={Space * 1} />
         <Text as="p" color={Color.MONO_100} typography={Typography.NORMAL12}>
-          {term}
+          {await getTerm()}
         </Text>
       </_Content>,
     );
-  }, [term, termDialogA11yId, updateDialogContent]);
+  };
 
-  const handleRequestToContactDialogOpen = useCallback(() => {
+  const handleRequestToContactDialogOpen = async () => {
+    const getContact = async () => {
+      if (contact != null) return contact;
+      const res = await fetch('/assets/texts/contact.txt');
+      const newContact = await res.text();
+      setContact(newContact);
+      return newContact;
+    };
+
     updateDialogContent(
       <_Content aria-labelledby={contactDialogA11yId} role="dialog">
         <Text as="h2" color={Color.MONO_100} id={contactDialogA11yId} typography={Typography.NORMAL16}>
@@ -63,13 +78,21 @@ export const Footer: React.FC = () => {
         </Text>
         <Spacer height={Space * 1} />
         <Text as="p" color={Color.MONO_100} typography={Typography.NORMAL12}>
-          {contact}
+          {await getContact()}
         </Text>
       </_Content>,
     );
-  }, [contact, contactDialogA11yId, updateDialogContent]);
+  };
 
-  const handleRequestToQuestionDialogOpen = useCallback(() => {
+  const handleRequestToQuestionDialogOpen = async () => {
+    const getQuestion = async () => {
+      if (question != null) return question;
+      const res = await fetch('/assets/texts/question.txt');
+      const newQuestion = await res.text();
+      setQuestion(newQuestion);
+      return newQuestion;
+    };
+
     updateDialogContent(
       <_Content aria-labelledby={questionDialogA11yId} role="dialog">
         <Text as="h2" color={Color.MONO_100} id={questionDialogA11yId} typography={Typography.NORMAL16}>
@@ -77,13 +100,21 @@ export const Footer: React.FC = () => {
         </Text>
         <Spacer height={Space * 1} />
         <Text as="p" color={Color.MONO_100} typography={Typography.NORMAL12}>
-          {question}
+          {await getQuestion()}
         </Text>
       </_Content>,
     );
-  }, [question, questionDialogA11yId, updateDialogContent]);
+  };
 
-  const handleRequestToCompanyDialogOpen = useCallback(() => {
+  const handleRequestToCompanyDialogOpen = async () => {
+    const getCompany = async () => {
+      if (company != null) return company;
+      const res = await fetch('/assets/texts/company.txt');
+      const newCompany = await res.text();
+      setCompany(newCompany);
+      return newCompany;
+    };
+
     updateDialogContent(
       <_Content aria-labelledby={companyDialogA11yId} role="dialog">
         <Text as="h2" color={Color.MONO_100} id={companyDialogA11yId} typography={Typography.NORMAL16}>
@@ -91,13 +122,21 @@ export const Footer: React.FC = () => {
         </Text>
         <Spacer height={Space * 1} />
         <Text as="p" color={Color.MONO_100} typography={Typography.NORMAL12}>
-          {company}
+          {await getCompany()}
         </Text>
       </_Content>,
     );
-  }, [company, companyDialogA11yId, updateDialogContent]);
+  };
 
-  const handleRequestToOverviewDialogOpen = useCallback(() => {
+  const handleRequestToOverviewDialogOpen = async () => {
+    const getOverview = async () => {
+      if (overview != null) return overview;
+      const res = await fetch('/assets/texts/overview.txt');
+      const newOverview = await res.text();
+      setOverview(newOverview);
+      return newOverview;
+    };
+
     updateDialogContent(
       <_Content aria-labelledby={overviewDialogA11yId} role="dialog">
         <Text as="h2" color={Color.MONO_100} id={overviewDialogA11yId} typography={Typography.NORMAL16}>
@@ -105,34 +144,11 @@ export const Footer: React.FC = () => {
         </Text>
         <Spacer height={Space * 1} />
         <Text as="p" color={Color.MONO_100} typography={Typography.NORMAL12}>
-          {overview}
+          {await getOverview()}
         </Text>
       </_Content>,
     );
-  }, [overview, overviewDialogA11yId, updateDialogContent]);
-
-  useEffect(() => {
-    const dialog = document.getElementById('dialog-container');
-    if (!dialog) return;
-    const label = dialog.querySelector('h2')?.textContent;
-
-    if (term && label === '利用規約') handleRequestToTermDialogOpen();
-    if (contact && label === 'お問い合わせ') handleRequestToContactDialogOpen();
-    if (question && label === 'Q&A') handleRequestToQuestionDialogOpen();
-    if (company && label === '運営会社') handleRequestToCompanyDialogOpen();
-    if (overview && label === 'Cyber TOONとは') handleRequestToOverviewDialogOpen();
-  }, [
-    company,
-    contact,
-    handleRequestToCompanyDialogOpen,
-    handleRequestToContactDialogOpen,
-    handleRequestToOverviewDialogOpen,
-    handleRequestToQuestionDialogOpen,
-    handleRequestToTermDialogOpen,
-    overview,
-    question,
-    term,
-  ]);
+  };
 
   return (
     <Box as="footer" backgroundColor={Color.Background} p={Space * 1}>
