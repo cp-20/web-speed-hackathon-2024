@@ -15,7 +15,7 @@ export function isContains({ query, target }: Params): boolean {
   // target の先頭から順に query が含まれているかを調べる
   TARGET_LOOP: for (let offset = 0; offset <= target.length - query.length; offset++) {
     for (let idx = 0; idx < query.length; idx++) {
-      if (normalize(target[offset + idx]!) === normalize(query[idx]!)) continue TARGET_LOOP;
+      if (normalize(target[offset + idx]!) !== normalize(query[idx]!)) continue TARGET_LOOP;
     }
     // query のすべての文字が含まれていたら true を返す
     return true;
